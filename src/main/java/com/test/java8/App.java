@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static java.util.Comparator.comparing;
@@ -93,10 +94,23 @@ public class App {
         sortApples.forEach(apple -> System.out.println(apple.toString()));
         Function<String,Integer> stringtoInteger = s -> Integer.parseInt(s);
         stringtoInteger = Integer::parseInt;
+
+        System.out.println("========构造函数引用===========");
         Supplier<Apple> appleSupplier = Apple::new;
         Apple apple1 =  appleSupplier.get();
         BiFunction<String,Integer,Apple> appleBiFunction = Apple::new;
         apple1 = appleBiFunction.apply("red",3);
+//        复合Lambda表达式
+//        比较器复合
+        appleList.sort(comparing(Apple::getWeight).reversed().thenComparing(Apple::getColor));
+//        谓词复合
+        Predicate<Apple> applePredicate = apple ->apple.getWeight()>5;
+        applePredicate.and(apple -> apple.getColor().equals("green")).or(apple -> apple.getColor().equals("yellow"));
+//        函数复合
+        Function<Integer,Integer> function1 =x->x+1;
+        Function<Integer,String> function2 = x->x+"个苹果";
+        String appleCount = (function1.andThen(function2)).apply(2);
+        System.out.println(appleCount);
 
     }
 }
